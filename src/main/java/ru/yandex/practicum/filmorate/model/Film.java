@@ -8,6 +8,15 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import java.time.Duration;
 import java.time.LocalDate;
+import ru.yandex.practicum.filmorate.validation.ValidDuration;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.PastOrPresent;
+import ru.yandex.practicum.filmorate.validation.ValidDuration;
+
+import java.time.Duration;
+import java.time.LocalDate;
 
 @Data
 public class Film {
@@ -19,9 +28,10 @@ public class Film {
     @Size(max = 200, message = "Описание не может содержать более 200 символов")
     private String description;
 
+    @PastOrPresent(message = "Дата релиза не может быть в будущем")
     private LocalDate releaseDate;
 
-    @Positive(message = "Продолжительность фильма должна быть положительной")
+    @ValidDuration
     private Duration duration;
 
     public void setReleaseDate(LocalDate releaseDate) {
