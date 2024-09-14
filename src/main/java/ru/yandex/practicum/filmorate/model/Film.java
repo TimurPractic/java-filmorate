@@ -1,5 +1,7 @@
 package ru.yandex.practicum.filmorate.model;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonSetter;
 import lombok.Data;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 
@@ -35,4 +37,14 @@ public class Film {
         }
         this.releaseDate = releaseDate;
     }
+
+    @JsonGetter("duration")
+    public int getDurationMinutes() {
+        return (int) duration.toMinutes();
+    }
+    @JsonSetter("duration")
+    public void setDurationMinutes(int minutes) {
+        this.duration = Duration.ofMinutes(minutes);
+    }
+
 }

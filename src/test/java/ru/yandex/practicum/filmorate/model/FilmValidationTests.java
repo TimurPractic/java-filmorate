@@ -6,6 +6,8 @@ import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 
 import java.time.Duration;
@@ -15,8 +17,10 @@ import java.util.Set;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+@WebMvcTest
 class FilmValidationTests {
 
+    @Autowired
     private Validator validator;
 
     @BeforeEach
@@ -100,16 +104,4 @@ class FilmValidationTests {
         assertThat(violations).isNotEmpty();
         assertThat(violations.stream().anyMatch(v -> v.getMessage().contains("Продолжительность должна быть положительным числом"))).isTrue();
     }
-
-//    @Test
-//    void whenEmptyFilm_thenConstraintViolations() {
-//        Film film = new Film();
-//
-//        Set<jakarta.validation.ConstraintViolation<Film>> violations = validator.validate(film);
-//
-//        assertThat(violations).isNotEmpty();
-//        assertThat(violations.stream().anyMatch(v -> v.getMessage().contains("Название фильма не может быть пустым"))).isTrue();
-//        assertThat(violations.stream().anyMatch(v -> v.getMessage().contains("Дата релиза не может быть раньше 28 декабря 1895 года"))).isTrue();
-//        assertThat(violations.stream().anyMatch(v -> v.getMessage().contains("Продолжительность должна быть положительным числом"))).isTrue();
-//    }
 }

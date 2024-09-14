@@ -109,16 +109,4 @@ public class UserValidationTests {
         assertThat(violations).isNotEmpty();
         assertThat(violations.stream().anyMatch(v -> v.getMessage().contains("Дата рождения не может быть в будущем"))).isTrue();
     }
-
-//    @Test
-//    void whenEmptyUser_thenConstraintViolations() {
-//        User user = new User(); // Пустой пользователь
-//
-//        Set<jakarta.validation.ConstraintViolation<User>> violations = validator.validate(user);
-//
-//        assertThat(violations).isNotEmpty();
-//        assertThat(violations.stream().anyMatch(v -> v.getMessage().contains("Электронная почта не может быть пустой"))).isTrue();
-//        assertThat(violations.stream().anyMatch(v -> v.getMessage().contains("Логин не может содержать пробелы"))).isTrue();
-//        assertThat(violations.stream().anyMatch(v -> v.getMessage().contains("Дата рождения не может быть в будущем"))).isTrue();
-//    }
 }
