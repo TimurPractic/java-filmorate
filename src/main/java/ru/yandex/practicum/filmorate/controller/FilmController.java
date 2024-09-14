@@ -43,9 +43,7 @@ public class FilmController {
         if (films.containsKey(film.getId())) {
             films.put(film.getId(), film);
         } else {
-            throw new IllegalArgumentException("Фильм с ID "+
-                    film.getId()+
-                    " не найден.");
+            throw new IllegalArgumentException("Фильм с ID " + film.getId() + " не найден.");
         }
         return film;
     }
