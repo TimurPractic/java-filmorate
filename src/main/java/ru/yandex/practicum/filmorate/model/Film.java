@@ -41,6 +41,7 @@ public class Film {
     public int getDurationMinutes() {
         return (int) duration.toMinutes();
     }
+
     @JsonSetter("duration")
     public void setDurationMinutes(int minutes) {
         this.duration = Duration.ofMinutes(minutes);
