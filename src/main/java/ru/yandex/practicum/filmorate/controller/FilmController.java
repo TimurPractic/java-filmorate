@@ -15,18 +15,30 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Java-doc filler.
+ */
 @Validated
 @RestController
 @RequestMapping("/films")
 @Slf4j
 public class FilmController {
+    /**
+     * Java-doc filler.
+     */
     private final Map<Integer, Film> films = new HashMap<>();
 
     @PostMapping
     /**
      * Create a new film.
+     * @param film объект фильма, который нужно создать
+     * @return созданный фильм с присвоенным ID
+     * @throws IllegalArgumentException если фильм не валиден
+     * <p>
+     * Этот метод может быть переопределен в подклассах для добавления дополнительной логики создания фильма.
+     * </p>
      */
-    public Film create(@Valid @RequestBody Film film) {
+     public Film create(@Valid @RequestBody Film film) {
         log.info("Создание фильма: {}", film);
         int id = films.size() + 1;
         film.setId(id);

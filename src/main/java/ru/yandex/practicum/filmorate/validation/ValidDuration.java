@@ -12,7 +12,16 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = DurationValidator.class)
 public @interface ValidDuration {
+    /**
+     * The message of the violation.
+     */
     String message() default "Продолжительность должна быть положительным числом";
+    /**
+     * Java-doc filler.
+     */
     Class<?>[] groups() default {};
+    /**
+     * Java-doc filler.
+     */
     Class<? extends Payload>[] payload() default {};
 }
