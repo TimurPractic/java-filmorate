@@ -4,19 +4,13 @@ import lombok.Data;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import java.time.Duration;
 import java.time.LocalDate;
 import ru.yandex.practicum.filmorate.validation.ValidDuration;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import jakarta.validation.constraints.PastOrPresent;
-import ru.yandex.practicum.filmorate.validation.ValidDuration;
 
-import java.time.Duration;
-import java.time.LocalDate;
 
 @Data
 public class Film {

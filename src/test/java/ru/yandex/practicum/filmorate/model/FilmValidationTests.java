@@ -56,7 +56,7 @@ class FilmValidationTests {
         Film film = new Film();
         film.setId(1);
         film.setName("Valid Film");
-        film.setDescription("A".repeat(201)); // Длинное описание
+        film.setDescription("A".repeat(201));
         film.setReleaseDate(LocalDate.of(1895, 12, 28));
         film.setDuration(Duration.ofMinutes(120));
 
@@ -88,7 +88,7 @@ class FilmValidationTests {
         film.setName("Valid Film");
         film.setDescription("Valid description");
         film.setReleaseDate(LocalDate.of(1895, 12, 28));
-        film.setDuration(Duration.ofMinutes(-120)); // Отрицательная продолжительность
+        film.setDuration(Duration.ofMinutes(-120));
 
         Set<jakarta.validation.ConstraintViolation<Film>> violations = validator.validate(film);
 
