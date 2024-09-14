@@ -30,6 +30,7 @@ public class User {
     @NotBlank(message = "Логин не может быть пустым")
     @Pattern(regexp = "^[^\\s]*$", message = "Логин не может содержать пробелы")
     private String login;
+
     /**
      * Java-doc filler.
      */
@@ -40,6 +41,7 @@ public class User {
      */
     @Past(message = "Дата рождения не может быть в будущем")
     private LocalDate birthday;
+
     /**
      * Java-doc filler.
      */
