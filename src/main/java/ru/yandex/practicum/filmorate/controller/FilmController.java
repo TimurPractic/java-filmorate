@@ -1,6 +1,8 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -14,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Validated
 @RestController
 @RequestMapping("/films")
 @Slf4j
@@ -24,7 +27,7 @@ public class FilmController {
     /**
      * Create a new film.
      */
-    public Film create(@RequestBody Film film) {
+    public Film create(@Valid @RequestBody Film film) {
         log.info("Создание фильма: {}", film);
         int id = films.size() + 1;
         film.setId(id);
@@ -36,7 +39,7 @@ public class FilmController {
     /**
      * Update an existing film.
      */
-    public Film update(@RequestBody Film film) {
+    public Film update(@Valid @RequestBody Film film) {
         log.info("Обновление фильма: {}", film);
         if (films.containsKey(film.getId())) {
             films.put(film.getId(), film);
