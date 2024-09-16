@@ -12,41 +12,41 @@ import ru.yandex.practicum.filmorate.validation.ValidDuration;
 import jakarta.validation.constraints.PastOrPresent;
 
 /**
- * Java-doc filler.
+ * Class for modeling Film data model.
  */
 @Data
 public class Film {
     /**
-     * Java-doc filler.
+     * Film identical number.
      */
     private int id;
 
     /**
-     * Java-doc filler.
+     * Film name.
      */
     @NotBlank(message = "Название фильма не может быть пустым")
     private String name;
 
     /**
-     * Java-doc filler.
+     * Film description.
      */
     @Size(max = 200, message = "Описание не может содержать более 200 символов")
     private String description;
 
     /**
-     * Java-doc filler.
+     * Date of film release.
      */
     @PastOrPresent(message = "Дата релиза не может быть в будущем")
     private LocalDate releaseDate;
 
     /**
-     * Java-doc filler.
+     * Duration of the film.
      */
     @ValidDuration
     private Duration duration;
 
     /**
-     * Java-doc filler.
+     * Method for proper setting of release date including validation of rule "not before cinema invention".
      */
     public void setReleaseDate(LocalDate releaseDate) {
         LocalDate earliestReleaseDate = LocalDate.of(1895, 12, 28); // 28 декабря 1895 года
@@ -57,7 +57,7 @@ public class Film {
     }
 
     /**
-     * Java-doc filler.
+     * Method for proper getting of film duration.
      */
     @JsonGetter("duration")
     public int getDurationMinutes() {
@@ -65,7 +65,7 @@ public class Film {
     }
 
     /**
-     * Java-doc filler.
+     * Method for proper setting of film duration.
      */
     @JsonSetter("duration")
     public void setDurationMinutes(int minutes) {

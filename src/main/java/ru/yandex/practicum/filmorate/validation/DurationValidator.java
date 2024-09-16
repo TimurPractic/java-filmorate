@@ -11,6 +11,9 @@ public class DurationValidator implements ConstraintValidator<ValidDuration, Dur
     public void initialize(ValidDuration constraintAnnotation) {
     }
 
+    /**
+     * This method is for proper validation is duration valid.
+     */
     @Override
     public boolean isValid(Duration duration, ConstraintValidatorContext context) {
         if (duration == null) {

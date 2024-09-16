@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * GlobalExceptionHandler.
+ * Global Exception Handler - class for handle exceptions from creation and updating model classes.
  */
 @ControllerAdvice
 @Slf4j

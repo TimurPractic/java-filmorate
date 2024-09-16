@@ -8,42 +8,42 @@ import lombok.Data;
 import java.time.LocalDate;
 
 /**
- * User.
+ * Class for modeling User data model.
  */
 @Data
 public class User {
     /**
-     * Java-doc filler.
+     * USer identical number.
      */
     private int id;
 
     /**
-     * Java-doc filler.
+     * User e-mail.
      */
     @Email(message = "Некорректный формат email")
     @NotBlank(message = "Email не может быть пустым")
     private String email;
 
     /**
-     * Java-doc filler.
+     * User login.
      */
     @NotBlank(message = "Логин не может быть пустым")
     @Pattern(regexp = "^[^\\s]*$", message = "Логин не может содержать пробелы")
     private String login;
 
     /**
-     * Java-doc filler.
+     * User name.
      */
     private String name;
 
     /**
-     * Java-doc filler.
+     * User birthday date.
      */
     @Past(message = "Дата рождения не может быть в будущем")
     private LocalDate birthday;
 
     /**
-     * Java-doc filler.
+     * Method for proper getting user's name.
      */
     public String getName() {
         return (name != null && !name.isBlank()) ? name : login;

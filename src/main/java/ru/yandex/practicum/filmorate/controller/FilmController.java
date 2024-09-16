@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Java-doc filler.
+ * REST Controller for Films class.
  */
 @Validated
 @RestController
@@ -24,11 +24,10 @@ import java.util.Map;
 @Slf4j
 public class FilmController {
     /**
-     * Java-doc filler.
+     * Hashmap for keeping films in memory.
      */
     private final Map<Integer, Film> films = new HashMap<>();
 
-    @PostMapping
     /**
      * Create a new film.
      * @param film объект фильма, который нужно создать
@@ -38,6 +37,7 @@ public class FilmController {
      * Этот метод может быть переопределен в подклассах для добавления дополнительной логики создания фильма.
      * </p>
      */
+    @PostMapping
      public Film create(@Valid @RequestBody Film film) {
         log.info("Создание фильма: {}", film);
         int id = films.size() + 1;
@@ -46,10 +46,10 @@ public class FilmController {
         return film;
     }
 
-    @PutMapping
     /**
      * Update an existing film.
      */
+    @PutMapping
     public Film update(@Valid @RequestBody Film film) {
         log.info("Обновление фильма: {}", film);
         if (films.containsKey(film.getId())) {
@@ -60,10 +60,10 @@ public class FilmController {
         return film;
     }
 
-    @GetMapping
     /**
      * Get the list of all films.
      */
+    @GetMapping
     public List<Film> list() {
         return new ArrayList<>(films.values());
     }

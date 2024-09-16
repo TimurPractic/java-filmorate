@@ -14,16 +14,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
+/**
+ * REST Controller for User class.
+ */
 @RestController
 @RequestMapping("/users")
 @Slf4j
 public class UserController {
     private final Map<Integer, User> users = new HashMap<>();
 
-    @PostMapping
     /**
      * Create a new user.
      */
+    @PostMapping
     public User create(@Valid @RequestBody User user) {
         log.info("Создание пользователя: {}", user);
         int id = users.size() + 1;
@@ -32,10 +36,10 @@ public class UserController {
         return user;
     }
 
-    @PutMapping
     /**
      * Update an existing user.
      */
+    @PutMapping
     public User update(@Valid @RequestBody User user) {
         log.info("Обновление пользователя: {}", user);
         if (users.containsKey(user.getId())) {
@@ -46,10 +50,10 @@ public class UserController {
         return user;
     }
 
-    @GetMapping
     /**
      * Get the list of all users.
      */
+    @GetMapping
     public List<User> list() {
         return new ArrayList<>(users.values());
     }
