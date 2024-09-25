@@ -15,6 +15,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.service.FilmService;
+
 /**
  * REST Controller for Films class.
  */
@@ -24,9 +29,14 @@ import java.util.Map;
 @Slf4j
 public class FilmController {
     /**
-     * Hashmap for keeping films in memory.
+     * Service for keeping films in memory.
      */
-    private final Map<Integer, Film> films = new HashMap<>();
+    private final FilmService filmService;
+
+    @Autowired
+    public FilmController(FilmService filmService) {
+        this.filmService = filmService;
+    }
 
     /**
      * Create a new film.
@@ -40,10 +50,7 @@ public class FilmController {
     @PostMapping
      public Film create(@Valid @RequestBody Film film) {
         log.info("Создание фильма: {}", film);
-        int id = films.size() + 1;
-        film.setId(id);
-        films.put(id, film);
-        return film;
+        return filmService.create(film);
     }
 
     /**
@@ -52,12 +59,7 @@ public class FilmController {
     @PutMapping
     public Film update(@Valid @RequestBody Film film) {
         log.info("Обновление фильма: {}", film);
-        if (films.containsKey(film.getId())) {
-            films.put(film.getId(), film);
-        } else {
-            throw new IllegalArgumentException("Фильм с ID " + film.getId() + " не найден.");
-        }
-        return film;
+        return filmService.update(film);
     }
 
     /**
@@ -65,6 +67,6 @@ public class FilmController {
      */
     @GetMapping
     public List<Film> list() {
-        return new ArrayList<>(films.values());
+        return filmService.getAllFilms();
     }
 }

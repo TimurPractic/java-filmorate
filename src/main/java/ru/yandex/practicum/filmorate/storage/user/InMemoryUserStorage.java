@@ -11,18 +11,19 @@ public class InMemoryUserStorage implements UserStorage {
     private int currentId = 1; // Для генерации уникальных ID
 
     @Override
-    public User addUser(User user) {
+    public User create(User user) {
         user.setId(currentId++);
         users.put(user.getId(), user);
         return user;
     }
 
     @Override
-    public User updateUser(User user) {
-        if (!users.containsKey(user.getId())) {
+    public User update(User user) {
+        if (users.containsKey(user.getId())) {
+            users.put(user.getId(), user);
+        } else {
             throw new IllegalArgumentException("Пользователь с ID " + user.getId() + " не найден.");
         }
-        users.put(user.getId(), user);
         return user;
     }
 

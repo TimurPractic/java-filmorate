@@ -6,11 +6,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface FilmStorage {
-    // Добавление нового фильма
-    Film addFilm(Film film);
-
-    // Обновление существующего фильма
-    Film updateFilm(Film film);
 
     // Удаление фильма по ID
     void deleteFilm(int filmId);
@@ -20,4 +15,9 @@ public interface FilmStorage {
 
     // Получение списка всех фильмов
     List<Film> getAllFilms();
+
+    Film create(Film film);
+
+    Film update(Film film);
+
 }

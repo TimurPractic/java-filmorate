@@ -52,5 +52,13 @@ public class UserService {
 
     public List<User> getAllUsers() {
         return userStorage.getAllUsers();
+
+    }
+    public User create(User user) {
+        return userStorage.create(user);
+    }
+
+    public User update(User user) {
+        return userStorage.update(user);
     }
 }

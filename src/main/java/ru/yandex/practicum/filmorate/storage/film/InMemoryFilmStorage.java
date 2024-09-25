@@ -8,21 +8,22 @@ import java.util.*;
 @Component
 public class InMemoryFilmStorage implements FilmStorage {
     private final Map<Integer, Film> films = new HashMap<>();
-    private int currentId = 1; // Для генерации уникальных ID
+    private int currentId = 1;
 
     @Override
-    public Film addFilm(Film film) {
+    public Film create(Film film) {
         film.setId(currentId++);
         films.put(film.getId(), film);
         return film;
     }
 
     @Override
-    public Film updateFilm(Film film) {
-        if (!films.containsKey(film.getId())) {
+    public Film update(Film film) {
+        if (films.containsKey(film.getId())) {
+            films.put(film.getId(), film);
+        } else {
             throw new IllegalArgumentException("Фильм с ID " + film.getId() + " не найден.");
         }
-        films.put(film.getId(), film);
         return film;
     }
 

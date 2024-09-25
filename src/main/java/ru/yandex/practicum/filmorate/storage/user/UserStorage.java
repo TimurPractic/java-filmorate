@@ -7,10 +7,10 @@ import java.util.Optional;
 
 public interface UserStorage {
     // Добавление нового пользователя
-    User addUser(User user);
+    User create(User user);
 
     // Обновление существующего пользователя
-    User updateUser(User user);
+    User update(User user);
 
     // Удаление пользователя по ID
     void deleteUser(int userId);
@@ -20,4 +20,5 @@ public interface UserStorage {
 
     // Получение списка всех пользователей
     List<User> getAllUsers();
+
 }
