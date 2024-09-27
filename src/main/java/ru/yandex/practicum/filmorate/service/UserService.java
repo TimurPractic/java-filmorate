@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private final UserStorage userStorage;
-    private final String UNF = "User not found";
+    private final String unf = "User not found";
 
     @Autowired
     public UserService(UserStorage userStorage) {
@@ -27,7 +27,7 @@ public class UserService {
         User friend = userStorage.getUserById(friendId);
 
         if (user == null) {
-            throw new IllegalArgumentException(UNF);
+            throw new IllegalArgumentException(unf);
         }
         if (friend == null) {
             throw new IllegalArgumentException("Friend not found");
@@ -44,7 +44,7 @@ public class UserService {
         User user = userStorage.getUserById(userId);
         User friend = userStorage.getUserById(friendId);
         if (user == null) {
-            throw new IllegalArgumentException(UNF);
+            throw new IllegalArgumentException(unf);
         }
         if (friend == null) {
             throw new IllegalArgumentException("Friend not found");
@@ -60,7 +60,7 @@ public class UserService {
         User user = userStorage.getUserById(userId);
         User otherUser = userStorage.getUserById(otherUserId);
         if (user == null) {
-            throw new IllegalArgumentException(UNF);
+            throw new IllegalArgumentException(unf);
         }
         if (otherUser == null) {
             throw new IllegalArgumentException("Other user not found");
