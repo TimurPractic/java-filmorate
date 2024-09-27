@@ -15,10 +15,9 @@ public interface UserStorage {
     // Удаление пользователя по ID
     void deleteUser(int userId);
 
-    // Получение пользователя по ID
-    Optional<User> getUserById(int userId);
-
     // Получение списка всех пользователей
     List<User> getAllUsers();
+
+    User getUserById(int id);
 
 }

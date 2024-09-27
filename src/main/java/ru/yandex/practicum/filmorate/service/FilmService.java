@@ -20,15 +20,27 @@ public class FilmService {
 
     // Добавление лайка
     public void addLike(int filmId, int userId) {
-        Film film = filmStorage.getFilmById(filmId).orElseThrow(() -> new IllegalArgumentException("Film not found"));
+        // Получаем фильм по его ID
+        Film film = filmStorage.getFilmById(filmId);
 
+        if (film == null) {
+            throw new IllegalArgumentException("Фильм с ID " + filmId + " не найден.");
+        }
+
+        // Добавляем лайк (ID пользователя в список лайков фильма)
         film.getLikes().add(userId);
     }
 
     // Удаление лайка
     public void removeLike(int filmId, int userId) {
-        Film film = filmStorage.getFilmById(filmId).orElseThrow(() -> new IllegalArgumentException("Film not found"));
+        // Получаем фильм по его ID
+        Film film = filmStorage.getFilmById(filmId);
 
+        if (film == null) {
+            throw new IllegalArgumentException("Фильм с ID " + filmId + " не найден.");
+        }
+
+        // Удаляем лайк (ID пользователя из списка лайков фильма)
         film.getLikes().remove(userId);
     }
 
@@ -52,4 +64,19 @@ public class FilmService {
         return filmStorage.update(film);
     }
 
+    public Film getFilmById(int id) {
+        return filmStorage.getFilmById(id);
+    }
+
+
+    public List<Film> getPopularFilms(int count) {
+        // Получаем список всех фильмов из хранилища
+        List<Film> films = filmStorage.getAllFilms();
+
+        // Сортируем фильмы по количеству лайков в порядке убывания
+        return films.stream()
+                .sorted((f1, f2) -> Integer.compare(f2.getLikes().size(), f1.getLikes().size())) // Сортировка по количеству лайков
+                .limit(count) // Ограничиваем количество фильмов до заданного параметра count
+                .collect(Collectors.toList());
+    }
 }

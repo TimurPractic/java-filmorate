@@ -10,9 +10,6 @@ public interface FilmStorage {
     // Удаление фильма по ID
     void deleteFilm(int filmId);
 
-    // Получение фильма по ID
-    Optional<Film> getFilmById(int filmId);
-
     // Получение списка всех фильмов
     List<Film> getAllFilms();
 
@@ -20,4 +17,5 @@ public interface FilmStorage {
 
     Film update(Film film);
 
+    Film getFilmById(int id);
 }
