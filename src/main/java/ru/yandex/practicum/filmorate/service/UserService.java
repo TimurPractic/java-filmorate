@@ -12,19 +12,22 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private final UserStorage userStorage;
+    private final String UNF = "User not found";
 
     @Autowired
     public UserService(UserStorage userStorage) {
         this.userStorage = userStorage;
     }
 
-    // Добавление в друзья
+    /**
+     * Add to friends.
+     */
     public void addFriend(int userId, int friendId) {
         User user = userStorage.getUserById(userId);  // Просто получаем пользователя
         User friend = userStorage.getUserById(friendId);
 
         if (user == null) {
-            throw new IllegalArgumentException("User not found");
+            throw new IllegalArgumentException(UNF);
         }
         if (friend == null) {
             throw new IllegalArgumentException("Friend not found");
@@ -34,37 +37,36 @@ public class UserService {
         friend.getFriends().add(userId);
     }
 
-    // Удаление из друзей
+    /**
+     * Remove from friends.
+     */
     public void removeFriend(int userId, int friendId) {
         User user = userStorage.getUserById(userId);
         User friend = userStorage.getUserById(friendId);
-
         if (user == null) {
-            throw new IllegalArgumentException("User not found");
+            throw new IllegalArgumentException(UNF);
         }
         if (friend == null) {
             throw new IllegalArgumentException("Friend not found");
         }
-
         user.getFriends().remove(friendId);
         friend.getFriends().remove(userId);
     }
 
-    // Вывод списка общих друзей
+    /**
+     * Show mutual friends.
+     */
     public List<User> getCommonFriends(int userId, int otherUserId) {
         User user = userStorage.getUserById(userId);
         User otherUser = userStorage.getUserById(otherUserId);
-
         if (user == null) {
-            throw new IllegalArgumentException("User not found");
+            throw new IllegalArgumentException(UNF);
         }
         if (otherUser == null) {
             throw new IllegalArgumentException("Other user not found");
         }
-
         Set<Integer> commonFriendsIds = new HashSet<>(user.getFriends());
         commonFriendsIds.retainAll(otherUser.getFriends());
-
         return commonFriendsIds.stream()
                 .map(id -> userStorage.getUserById(id))
                 .filter(Objects::nonNull)
@@ -75,6 +77,7 @@ public class UserService {
         return userStorage.getAllUsers();
 
     }
+
     public User create(User user) {
         return userStorage.create(user);
     }
@@ -93,9 +96,7 @@ public class UserService {
         if (user == null) {
             throw new IllegalArgumentException("Пользователь с ID " + userId + " не найден.");
         }
-
         Set<Integer> friendIds = user.getFriends();
-
         if (friendIds == null || friendIds.isEmpty()) {
             return new ArrayList<>();
         }
@@ -108,5 +109,4 @@ public class UserService {
         }
         return friends;
     }
-
 }

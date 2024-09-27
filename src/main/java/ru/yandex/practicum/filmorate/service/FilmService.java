@@ -18,7 +18,9 @@ public class FilmService {
         this.filmStorage = filmStorage;
     }
 
-    // Добавление лайка
+    /**
+     * Add like.
+     */
     public void addLike(int filmId, int userId) {
         Film film = filmStorage.getFilmById(filmId);
         if (film == null) {
@@ -27,7 +29,9 @@ public class FilmService {
         film.getLikes().add(userId);
     }
 
-    // Удаление лайка
+    /**
+     * Delete like.
+     */
     public void removeLike(int filmId, int userId) {
         Film film = filmStorage.getFilmById(filmId);
         if (film == null) {
@@ -36,7 +40,9 @@ public class FilmService {
         film.getLikes().remove(userId);
     }
 
-    // Вывод 10 наиболее популярных фильмов по количеству лайков
+    /**
+     * Get a list of most liked movies.
+     */
     public List<Film> getMostPopularFilms(int count) {
         return filmStorage.getAllFilms().stream()
                 .sorted((f1, f2) -> Integer.compare(f2.getLikes().size(), f1.getLikes().size()))
@@ -62,7 +68,6 @@ public class FilmService {
 
     public List<Film> getPopularFilms(int count) {
         List<Film> films = filmStorage.getAllFilms();
-
         return films.stream()
                 .sorted((f1, f2) -> Integer.compare(f2.getLikes().size(), f1.getLikes().size()))
                 .limit(count)
