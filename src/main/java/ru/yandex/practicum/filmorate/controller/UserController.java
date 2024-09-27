@@ -18,8 +18,6 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 import java.util.List;
 
-import ru.yandex.practicum.filmorate.service.UserService;
-
 /**
  * REST Controller for User class.
  */
@@ -71,7 +69,9 @@ public class UserController {
         return userService.getUserById(id);
     }
 
-    // Добавление в друзья
+    /**
+     * Adding a friend.
+     */
     @PutMapping("/{id}/friends/{friendId}")
     public void addFriend(@PathVariable int id, @PathVariable int friendId) {
         log.info("Пользователь с ID {} добавляет в друзья пользователя с ID {}", id, friendId);
@@ -84,7 +84,9 @@ public class UserController {
         }
     }
 
-    // Удаление из друзей
+    /**
+     * deletion of a friend.
+     */
     @DeleteMapping("/{id}/friends/{friendId}")
     public void removeFriend(@PathVariable int id, @PathVariable int friendId) {
         log.info("Пользователь с ID {} удаляет из друзей пользователя с ID {}", id, friendId);
@@ -96,7 +98,10 @@ public class UserController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
-    // Получение списка друзей пользователя
+
+    /**
+     * Get a list of friends.
+     */
     @GetMapping("/{id}/friends")
     public List<User> getFriends(@PathVariable int id) {
         log.info("Получение списка друзей пользователя с ID {}", id);
@@ -107,7 +112,9 @@ public class UserController {
         }
     }
 
-    // Получение списка общих друзей
+    /**
+     * Get a list of mutual friends.
+     */
     @GetMapping("/{id}/friends/common/{otherId}")
     public List<User> getCommonFriends(@PathVariable int id, @PathVariable int otherId) {
         log.info("Получение списка общих друзей между пользователями с ID {} и {}", id, otherId);
