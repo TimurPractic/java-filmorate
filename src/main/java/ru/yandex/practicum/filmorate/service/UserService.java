@@ -86,10 +86,10 @@ public class UserService {
     public User update(User user) {
         List<User> allUsers = userStorage.getAllUsers();
         List<Integer> idsOfUsers = new ArrayList<>();
-        for(User i : allUsers) {
+        for (User i : allUsers) {
             idsOfUsers.add(i.getId());
         }
-         if (!idsOfUsers.contains(user.getId())){
+         if (!idsOfUsers.contains(user.getId())) {
             throw new UserNotFoundException("User with id " + user.getId() + " not found.");
         }
         return userStorage.update(user);
