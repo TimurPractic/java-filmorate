@@ -6,6 +6,8 @@ import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Class for modeling User data model.
@@ -42,10 +44,13 @@ public class User {
     @Past(message = "Дата рождения не может быть в будущем")
     private LocalDate birthday;
 
+    private Set<Integer> friends = new HashSet<>();
+
     /**
      * Method for proper getting user's name.
      */
     public String getName() {
         return (name != null && !name.isBlank()) ? name : login;
     }
+
 }

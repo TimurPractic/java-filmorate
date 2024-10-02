@@ -10,6 +10,8 @@ import java.time.Duration;
 import java.time.LocalDate;
 import ru.yandex.practicum.filmorate.validation.ValidDuration;
 import jakarta.validation.constraints.PastOrPresent;
+import java.util.Set;
+import java.util.HashSet;
 
 /**
  * Class for modeling Film data model.
@@ -44,6 +46,8 @@ public class Film {
      */
     @ValidDuration
     private Duration duration;
+
+    private Set<Integer> likes = new HashSet<>();
 
     /**
      * Method for proper setting of release date including validation of rule "not before cinema invention".
