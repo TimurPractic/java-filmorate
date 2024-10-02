@@ -2,8 +2,11 @@ package ru.yandex.practicum.filmorate.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -12,10 +15,12 @@ import java.util.stream.Collectors;
 public class FilmService {
 
     private final FilmStorage filmStorage;
+    private final UserStorage userStorage;
 
     @Autowired
-    public FilmService(FilmStorage filmStorage) {
+    public FilmService(FilmStorage filmStorage, UserStorage userStorage) {
         this.filmStorage = filmStorage;
+        this.userStorage = userStorage;
     }
 
     /**
@@ -23,8 +28,12 @@ public class FilmService {
      */
     public void addLike(int filmId, int userId) {
         Film film = filmStorage.getFilmById(filmId);
+        User user = userStorage.getUserById(userId);
         if (film == null) {
             throw new IllegalArgumentException("Фильм с ID " + filmId + " не найден.");
+        }
+        if (user == null) {
+            throw new UserNotFoundException("Юзер с ID " + userId + " не найден.");
         }
         film.getLikes().add(userId);
     }
@@ -34,8 +43,12 @@ public class FilmService {
      */
     public void removeLike(int filmId, int userId) {
         Film film = filmStorage.getFilmById(filmId);
+        User user = userStorage.getUserById(userId);
         if (film == null) {
             throw new IllegalArgumentException("Фильм с ID " + filmId + " не найден.");
+        }
+        if (user == null) {
+            throw new UserNotFoundException("Юзер с ID " + userId + " не найден.");
         }
         film.getLikes().remove(userId);
     }

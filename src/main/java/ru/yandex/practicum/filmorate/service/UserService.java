@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
@@ -83,6 +84,14 @@ public class UserService {
     }
 
     public User update(User user) {
+        List<User> allUsers = userStorage.getAllUsers();
+        List<Integer> idsOfUsers = new ArrayList<>();
+        for(User i : allUsers) {
+            idsOfUsers.add(i.getId());
+        }
+         if (!idsOfUsers.contains(user.getId())){
+            throw new UserNotFoundException("User with id " + user.getId() + " not found.");
+        }
         return userStorage.update(user);
     }
 
