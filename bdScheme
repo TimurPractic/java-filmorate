@@ -1,6 +1,3 @@
-// Use DBML to define your database structure
-// Docs: https://dbml.dbdiagram.io/docs
-
 Table film {
   film_id integer [primary key]
   name string
@@ -33,29 +30,17 @@ Table usersfriends {
 
 table genre {
   genre_id integer [primary key]
-  genre string
+  genre_name string
 }
 
 table rating {
   rating_id integer [primary key]
-  rating string
+  rating_name string
 }
 
-enum genre {
-  comedy
-  drama
-  cartoon
-  thriller
-  documentary
-  action
-}
-
-enum rating {
-  G
-  PG
-  PG13
-  R
-  NC17
+table genrefilm  {
+  genre_id integer
+  film_id integer
 }
 
 enum friendship {
@@ -67,5 +52,6 @@ Ref: film.film_id < filmslikes.film_id
 Ref: user.user_id < filmslikes.user_id
 Ref: user.user_id < usersfriends.first_user_id
 Ref: user.user_id < usersfriends.second_user_id
-Ref: film.genre_id > genre.genre_id
 Ref: film.rating_id > rating.rating_id
+Ref: film.film_id < genrefilm.film_id
+Ref: genre.genre_id < genrefilm.genre_id
