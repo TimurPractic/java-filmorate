@@ -84,19 +84,19 @@ public class UserService {
     }
 
     public User update(User user) {
-        List<User> allUsers = userStorage.getAllUsers();
-        List<Integer> idsOfUsers = new ArrayList<>();
-        for (User i : allUsers) {
-            idsOfUsers.add(i.getId());
-        }
-         if (!idsOfUsers.contains(user.getId())) {
-            throw new UserNotFoundException("User with id " + user.getId() + " not found.");
+        if (userStorage.getUserById(user.getId()) == null) {
+            throw new UserNotFoundException("Пользователь с ID " + user.getId() + " не найден.");
         }
         return userStorage.update(user);
     }
 
+
     public User getUserById(int id) {
-        return userStorage.getUserById(id);
+        User user = userStorage.getUserById(id);
+        if (user == null) {
+            throw new UserNotFoundException("Пользователь с ID " + id + " не найден.");
+        }
+        return user;
     }
 
     public List<User> getFriends(int userId) {
@@ -117,5 +117,12 @@ public class UserService {
             }
         }
         return friends;
+    }
+
+    public void deleteUser(int userId) {
+        if (userStorage.getUserById(userId) == null) {
+            throw new UserNotFoundException("Пользователь с ID " + userId + " не найден.");
+        }
+        userStorage.deleteUser(userId);
     }
 }

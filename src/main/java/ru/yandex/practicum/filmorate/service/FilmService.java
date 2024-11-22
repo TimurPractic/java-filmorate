@@ -72,11 +72,18 @@ public class FilmService {
     }
 
     public Film update(Film film) {
+        if (filmStorage.getFilmById(film.getId()) == null) {
+            throw new IllegalArgumentException("Фильм с ID " + film.getId() + " не найден.");
+        }
         return filmStorage.update(film);
     }
 
     public Film getFilmById(int id) {
-        return filmStorage.getFilmById(id);
+        Film film = filmStorage.getFilmById(id);
+        if (film == null) {
+            throw new IllegalArgumentException("Фильм с ID " + id + " не найден.");
+        }
+        return film;
     }
 
     public List<Film> getPopularFilms(int count) {
@@ -85,5 +92,12 @@ public class FilmService {
                 .sorted((f1, f2) -> Integer.compare(f2.getLikes().size(), f1.getLikes().size()))
                 .limit(count)
                 .collect(Collectors.toList());
+    }
+
+    public void deleteFilm(int filmId) {
+        if (filmStorage.getFilmById(filmId) == null) {
+            throw new IllegalArgumentException("Фильм с ID " + filmId + " не найден.");
+        }
+        filmStorage.deleteFilm(filmId);
     }
 }
