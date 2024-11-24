@@ -13,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Repository
@@ -35,6 +36,16 @@ public class FilmDbStorage implements FilmStorage {
         Rating rating = Rating.valueOf(ratingName.toUpperCase());
         film.setRating(rating);
         return film;
+    };
+
+    private final RowMapper<Genre> genreRowMapper = (rs, rowNum) -> {
+        Genre genre = Genre.values()[rs.getInt("genre_id") - 1]; // Поскольку genre_id начинается с 1
+        return genre;
+    };
+
+    private final RowMapper<Rating> ratingRowMapper = (rs, rowNum) -> {
+            String ratingName = rs.getString("rating_name");
+        return Rating.valueOf(ratingName.toUpperCase());
     };
 
     @Override
@@ -132,6 +143,28 @@ public class FilmDbStorage implements FilmStorage {
         return new HashSet<>(jdbcTemplate.query(sql, filmRowMapper, userId));
     }
 
+    // Метод для получения всех жанров
+    public List<Genre> getAllGenres() {
+        String sql = "SELECT genre_id FROM genre";
+        return jdbcTemplate.query(sql, genreRowMapper);
+    }
 
+    // Метод для получения жанра по ID
+    public Optional<Genre> getGenreById(int id) {
+        String sql = "SELECT genre_id FROM genre WHERE genre_id = ?";
+        return jdbcTemplate.query(sql, genreRowMapper, id).stream().findFirst();
+    }
+
+    // Метод для получения всех рейтингов (MPA)
+    public List<Rating> getAllRatings() {
+        String sql = "SELECT rating_name FROM rating";
+        return jdbcTemplate.query(sql, ratingRowMapper);
+    }
+
+    // Метод для получения рейтинга по ID
+    public Optional<Rating> getRatingById(int id) {
+        String sql = "SELECT rating_name FROM rating WHERE rating_id = ?";
+        return jdbcTemplate.query(sql, ratingRowMapper, id).stream().findFirst();
+    }
 
 }
