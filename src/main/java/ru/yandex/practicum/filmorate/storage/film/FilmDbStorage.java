@@ -96,6 +96,12 @@ public class FilmDbStorage implements FilmStorage {
         jdbcTemplate.update(sql, filmId, userId, liked);
     }
 
+    public int getFilmLikeCount(int filmId) {
+        String sql = "SELECT COUNT(*) FROM films_likes WHERE film_id = ?";
+
+        return jdbcTemplate.queryForObject(sql, Integer.class, filmId);
+    }
+
     // Удалить лайк
     public void removeLike(int filmId, int userId) {
         String sql = "DELETE FROM films_likes WHERE film_id = ? AND user_id = ?";
