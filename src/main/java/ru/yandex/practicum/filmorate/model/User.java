@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
+
 /**
  * Class for modeling User data model.
  */
@@ -17,6 +18,7 @@ public class User {
     /**
      * USer identical number.
      */
+
     private int id;
 
     /**

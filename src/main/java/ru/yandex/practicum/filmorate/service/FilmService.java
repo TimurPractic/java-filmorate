@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.model.Rating;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
@@ -74,6 +76,13 @@ public class FilmService {
     public Film update(Film film) {
         if (filmStorage.getFilmById(film.getId()) == null) {
             throw new IllegalArgumentException("Фильм с ID " + film.getId() + " не найден.");
+        }
+        if (!EnumSet.allOf(Genre.class).contains(film.getGenre())) {
+            throw new IllegalArgumentException("Нет такого жанра: " + film.getGenre());
+        }
+
+        if (!EnumSet.allOf(Rating.class).contains(film.getRating())) {
+            throw new IllegalArgumentException("Нет такого рейтинга: " + film.getRating());
         }
         return filmStorage.update(film);
     }
