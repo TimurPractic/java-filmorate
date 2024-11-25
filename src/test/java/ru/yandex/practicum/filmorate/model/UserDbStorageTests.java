@@ -1,13 +1,16 @@
 package ru.yandex.practicum.filmorate.model;
 
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.jdbc.core.JdbcTemplate;
 import ru.yandex.practicum.filmorate.storage.user.UserDbStorage;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,7 +21,42 @@ import static org.assertj.core.api.Assertions.assertThat;
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @Import({UserDbStorage.class})
 class UserDbStorageTests {
+
     private final UserDbStorage userStorage;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    @BeforeEach
+    void setup() {
+        if (jdbcTemplate == null) {
+            throw new IllegalStateException("JdbcTemplate is not properly initialized.");
+        }
+    }
+
+    @BeforeEach
+    void setupTestData() {
+        // Удаляем данные перед тестами
+        jdbcTemplate.update("DELETE FROM \"users_friends\""); // Удаляем связи дружбы
+        jdbcTemplate.update("DELETE FROM \"user\"");         // Удаляем пользователей
+
+        // Создаем пользователя 1
+        User user1 = new User();
+        user1.setName("John Doe");
+        user1.setEmail("john.doe@example.com");
+        user1.setLogin("boobies");
+        user1.setBirthday(LocalDate.of(1990, 1, 1));
+        userStorage.create(user1);
+
+        // Создаем пользователя 2
+        User user2 = new User();
+        user2.setName("Jane Smith");
+        user2.setEmail("jane.smith@example.com");
+        user2.setLogin("boobies2");
+        user2.setBirthday(LocalDate.of(1995, 5, 15));
+        userStorage.create(user2);
+    }
+
+
 
     @Test
     public void testFindUserById() {
@@ -44,6 +82,7 @@ class UserDbStorageTests {
 
     @Test
     public void testConfirmFriendship() {
+
         // Предположим, что дружба между пользователями с ID 1 и 2 предложена.
         userStorage.proposeFriendship(1, 2);
 

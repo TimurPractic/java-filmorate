@@ -6,11 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.junit.jupiter.EnabledIf;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Rating;
 import ru.yandex.practicum.filmorate.storage.film.FilmDbStorage;
+import ru.yandex.practicum.filmorate.storage.user.UserDbStorage;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -25,6 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class FilmDbStorageTests {
 
     private final FilmDbStorage filmStorage;
+//    private final UserDbStorage userStorage;
 
     @Test
     public void testCreateFilm() {
@@ -162,6 +165,13 @@ class FilmDbStorageTests {
         film.setRating(Rating.PG13);
         filmStorage.create(film);
 
+//        // Создаем пользователя.
+//        User user = new User();
+//        user.setName("Test User");
+//        user.setEmail("user@example.com");
+//        user.setBirthday(LocalDate.of(1990, 1, 1));
+//        userStorage.create(user);
+
         // Добавляем лайк.
         filmStorage.addOrUpdateLike(film.getId(), 1, true); // Предположим, что юзер с ID 1 ставит лайк
 
@@ -181,6 +191,13 @@ class FilmDbStorageTests {
         film.setGenre(Genre.ACTION);
         film.setRating(Rating.PG13);
         filmStorage.create(film);
+
+//        // Создаем пользователя.
+//        User user = new User();
+//        user.setName("Test User");
+//        user.setEmail("user@example.com");
+//        user.setBirthday(LocalDate.of(1990, 1, 1));
+//        userStorage.create(user);
 
         filmStorage.addOrUpdateLike(film.getId(), 1,true); // Предположим, что юзер с ID 1 ставит лайк
 

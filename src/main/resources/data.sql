@@ -1,5 +1,5 @@
 -- Вставка данных в таблицу genre
-INSERT INTO "genre" ("genre_id", "genre_name")
+INSERT INTO "genre"
 VALUES
 (1, 'ACTION'),
 (2, 'DRAMA'),
@@ -11,7 +11,7 @@ VALUES
 (8, 'DOCUMENTARY');
 
 -- Вставка данных в таблицу rating
-INSERT INTO "rating" ("rating_id", "rating_name")
+INSERT INTO "rating"
 VALUES
 (1, 'G'),
 (2, 'PG'),
