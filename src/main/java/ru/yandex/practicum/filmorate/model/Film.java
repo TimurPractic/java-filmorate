@@ -47,6 +47,19 @@ public class Film {
     @ValidDuration
     private Duration duration;
 
+    /**
+     * Genre of the film.
+     */
+    private Genre genre;
+
+    /**
+     * Rating of the film.
+     */
+    private Rating rating;
+
+    /**
+     * Set of user IDs who liked the film.
+     */
     private Set<Integer> likes = new HashSet<>();
 
     /**
