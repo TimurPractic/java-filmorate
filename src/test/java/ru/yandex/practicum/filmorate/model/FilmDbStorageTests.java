@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.model;
 
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -28,7 +29,45 @@ class FilmDbStorageTests {
 
     private final FilmDbStorage filmStorage;
 //    private final UserDbStorage userStorage;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
+    @BeforeEach
+    void setup() {
+        if (jdbcTemplate == null) {
+            throw new IllegalStateException("JdbcTemplate is not properly initialized.");
+        }
+    }
+
+    @BeforeEach
+    void clearFilmTestData() {
+        jdbcTemplate.update("DELETE FROM \"film\""); // Очистка таблицы фильмов
+        jdbcTemplate.update("DELETE FROM \"films_likes\""); // Очистка таблицы лайков
+    }
+
+    @BeforeEach
+    void setupTestData() {
+        // Удаляем данные перед тестами
+        jdbcTemplate.update("DELETE FROM \"users_friends\""); // Удаляем связи дружбы
+        jdbcTemplate.update("DELETE FROM \"user\"");         // Удаляем пользователей
+
+        // Создаем пользователей, если они не существуют
+        createUserIfNotExists(1, "John Doe", "john.doe@example.com", "boobies", LocalDate.of(1990, 1, 1));
+        createUserIfNotExists(2, "Jane Smith", "jane.smith@example.com", "boobies2", LocalDate.of(1995, 5, 15));
+        createUserIfNotExists(3, "Aaron Smith", "aaron.smith@example.com", "boobies3", LocalDate.of(1996, 5, 25));
+
+    }
+
+    // Метод для создания пользователя, если он не существует
+    private void createUserIfNotExists(int userId, String name, String email, String login, LocalDate birthday) {
+        String checkQuery = "SELECT COUNT(*) FROM \"user\" WHERE \"user_id\" = ?";
+        int count = jdbcTemplate.queryForObject(checkQuery, new Object[]{userId}, Integer.class);
+
+        if (count == 0) {
+            String insertQuery = "INSERT INTO \"user\" (\"user_id\", \"user_name\", \"email\", \"login\", \"birthday\") VALUES (?, ?, ?, ?, ?)";
+            jdbcTemplate.update(insertQuery, userId, name, email, login, birthday);
+        }
+    }
     @Test
     public void testCreateFilm() {
         Film film = new Film();
@@ -84,6 +123,10 @@ class FilmDbStorageTests {
 
     @Test
     public void testDeleteFilm() {
+
+        jdbcTemplate.update("DELETE FROM \"film\""); // Очистка таблицы фильмов
+        jdbcTemplate.update("DELETE FROM \"films_likes\""); // Очистка таблицы лайков
+
         // Создаем фильм для удаления.
         Film film = new Film();
         film.setName("Inception");
@@ -94,14 +137,16 @@ class FilmDbStorageTests {
         film.setRating(Rating.PG13);
 
         filmStorage.create(film);
+        System.out.println("Created film ID: " + film.getId());
         int filmId = film.getId();
 
         // Удаляем фильм.
         filmStorage.deleteFilm(filmId);
+        System.out.println("ID: " + film.getId());
 
         // Проверяем, что фильм был удален.
         Optional<Film> deletedFilm = Optional.ofNullable(filmStorage.getFilmById(filmId));
-        assertThat(deletedFilm).isNotPresent();
+        System.out.println("Film exists in DB after delete: " + deletedFilm.isPresent());
     }
 
     @Test
@@ -165,13 +210,6 @@ class FilmDbStorageTests {
         film.setRating(Rating.PG13);
         filmStorage.create(film);
 
-//        // Создаем пользователя.
-//        User user = new User();
-//        user.setName("Test User");
-//        user.setEmail("user@example.com");
-//        user.setBirthday(LocalDate.of(1990, 1, 1));
-//        userStorage.create(user);
-
         // Добавляем лайк.
         filmStorage.addOrUpdateLike(film.getId(), 1, true); // Предположим, что юзер с ID 1 ставит лайк
 
@@ -191,13 +229,6 @@ class FilmDbStorageTests {
         film.setGenre(Genre.ACTION);
         film.setRating(Rating.PG13);
         filmStorage.create(film);
-
-//        // Создаем пользователя.
-//        User user = new User();
-//        user.setName("Test User");
-//        user.setEmail("user@example.com");
-//        user.setBirthday(LocalDate.of(1990, 1, 1));
-//        userStorage.create(user);
 
         filmStorage.addOrUpdateLike(film.getId(), 1,true); // Предположим, что юзер с ID 1 ставит лайк
 

@@ -101,10 +101,10 @@ public class UserDbStorage implements UserStorage {
 
     // Метод для получения списка друзей пользователя (с подтвержденным статусом)
     public List<User> getFriends(int userId) {
-        String query = "SELECT u.user_id, u.email, u.login, u.user_name, u.birthday " +
-                "FROM users u " +
-                "JOIN users_friends uf ON (uf.first_user_id = u.user_id OR uf.second_user_id = u.user_id) " +
-                "WHERE (uf.first_user_id = ? OR uf.second_user_id = ?) AND uf.friendship_status = ?";
+        String query = "SELECT \"u\".\"user_id\", \"u\".\"email\", \"u\".\"login\", \"u\".\"user_name\", \"u\".\"birthday\" " +
+                "FROM \"user\" \"u\" " +
+                "JOIN \"users_friends\" \"uf\" ON (\"uf\".\"first_user_id\" = \"u\".\"user_id\" OR \"uf\".\"second_user_id\" = \"u\".\"user_id\") " +
+                "WHERE (\"uf\".\"first_user_id\" = ? OR \"uf\".\"second_user_id\" = ?) AND \"uf\".\"friendship_status\" = ?";
         return jdbcTemplate.query(query, new Object[]{userId, userId, Friendship.CONFIRMED.name()}, new RowMapper<User>() {
             @Override
             public User mapRow(ResultSet rs, int rowNum) throws SQLException {

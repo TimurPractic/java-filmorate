@@ -39,23 +39,23 @@ class UserDbStorageTests {
         jdbcTemplate.update("DELETE FROM \"users_friends\""); // Удаляем связи дружбы
         jdbcTemplate.update("DELETE FROM \"user\"");         // Удаляем пользователей
 
-        // Создаем пользователя 1
-        User user1 = new User();
-        user1.setName("John Doe");
-        user1.setEmail("john.doe@example.com");
-        user1.setLogin("boobies");
-        user1.setBirthday(LocalDate.of(1990, 1, 1));
-        userStorage.create(user1);
+        // Создаем пользователей, если они не существуют
+        createUserIfNotExists(1, "John Doe", "john.doe@example.com", "boobies", LocalDate.of(1990, 1, 1));
+        createUserIfNotExists(2, "Jane Smith", "jane.smith@example.com", "boobies2", LocalDate.of(1995, 5, 15));
+        createUserIfNotExists(3, "Aaron Smith", "aaron.smith@example.com", "boobies3", LocalDate.of(1996, 5, 25));
 
-        // Создаем пользователя 2
-        User user2 = new User();
-        user2.setName("Jane Smith");
-        user2.setEmail("jane.smith@example.com");
-        user2.setLogin("boobies2");
-        user2.setBirthday(LocalDate.of(1995, 5, 15));
-        userStorage.create(user2);
     }
 
+    // Метод для создания пользователя, если он не существует
+    private void createUserIfNotExists(int userId, String name, String email, String login, LocalDate birthday) {
+        String checkQuery = "SELECT COUNT(*) FROM \"user\" WHERE \"user_id\" = ?";
+        int count = jdbcTemplate.queryForObject(checkQuery, new Object[]{userId}, Integer.class);
+
+        if (count == 0) {
+            String insertQuery = "INSERT INTO \"user\" (\"user_id\", \"user_name\", \"email\", \"login\", \"birthday\") VALUES (?, ?, ?, ?, ?)";
+            jdbcTemplate.update(insertQuery, userId, name, email, login, birthday);
+        }
+    }
 
 
     @Test
@@ -103,9 +103,9 @@ class UserDbStorageTests {
         userStorage.confirmFriendship(1, 3);
 
         // Получаем список друзей для пользователя с ID 1.
-        List<User> friends = userStorage.getFriends(1);
+        List<User> friendslist = userStorage.getFriends(1);
 
-        assertThat(friends)
+        assertThat(friendslist)
                 .hasSize(2)  // Ожидаем 2 друга
                 .extracting("id")
                 .containsExactlyInAnyOrder(2, 3);  // ID друзей 2 и 3

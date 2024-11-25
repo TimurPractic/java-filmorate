@@ -1,4 +1,5 @@
 -- Вставка данных в таблицу genre
+DELETE FROM "genre";
 INSERT INTO "genre"
 VALUES
 (1, 'ACTION'),
@@ -11,6 +12,7 @@ VALUES
 (8, 'DOCUMENTARY');
 
 -- Вставка данных в таблицу rating
+DELETE FROM "rating";
 INSERT INTO "rating"
 VALUES
 (1, 'G'),
