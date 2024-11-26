@@ -54,11 +54,7 @@ public class FilmDbStorage implements FilmStorage {
     private final RowMapper<RatingResponse> ratingRowMapper = (rs, rowNum) -> {
         int ratingId = rs.getInt("rating_id");
         String ratingName = rs.getString("rating_name");
-
-        // Валидация: убедимся, что имя соответствует enum
-        Rating.valueOf(ratingName.toUpperCase()); // Проверяем, что name есть в enum
-
-        return new RatingResponse(ratingId, ratingName); // Возвращаем объект с ID и именем
+        return new RatingResponse(ratingId, Rating.fromDisplayName(ratingName).getDisplayName());
     };
 
 
