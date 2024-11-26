@@ -11,11 +11,10 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Rating;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.RatingResponse;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.time.Duration;
 import java.util.HashSet;
 import java.util.List;
@@ -52,10 +51,16 @@ public class FilmDbStorage implements FilmStorage {
         return genre;
     };
 
-    private final RowMapper<Rating> ratingRowMapper = (rs, rowNum) -> {
-            String ratingName = rs.getString("rating_name");
-        return Rating.valueOf(ratingName.toUpperCase());
+    private final RowMapper<RatingResponse> ratingRowMapper = (rs, rowNum) -> {
+        int ratingId = rs.getInt("rating_id");
+        String ratingName = rs.getString("rating_name");
+
+        // Валидация: убедимся, что имя соответствует enum
+        Rating.valueOf(ratingName.toUpperCase()); // Проверяем, что name есть в enum
+
+        return new RatingResponse(ratingId, ratingName); // Возвращаем объект с ID и именем
     };
+
 
     @Override
     public void deleteFilm(int filmId) {
@@ -206,16 +211,18 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     // Метод для получения всех рейтингов (MPA)
-    public List<Rating> getAllRatings() {
-        String sql = "SELECT \"rating_name\" FROM \"rating\"";
+    public List<RatingResponse> getAllRatings() {
+        String sql = "SELECT \"rating_id\", \"rating_name\" FROM \"rating\"";
         return jdbcTemplate.query(sql, ratingRowMapper);
     }
 
+
     // Метод для получения рейтинга по ID
-    public Optional<Rating> getRatingById(int id) {
-        String sql = "SELECT \"rating_name\" FROM \"rating\" WHERE \"rating_id\" = ?";
+    public Optional<RatingResponse> getRatingById(int id) {
+        String sql = "SELECT \"rating_id\", \"rating_name\" FROM \"rating\" WHERE \"rating_id\" = ?";
         return jdbcTemplate.query(sql, ratingRowMapper, id).stream().findFirst();
     }
+
     private String convertDurationToTimeString(Duration duration) {
         long hours = duration.toHours();
         long minutes = duration.toMinutesPart();

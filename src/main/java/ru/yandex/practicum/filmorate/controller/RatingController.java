@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Rating;
+import ru.yandex.practicum.filmorate.service.RatingResponse;
 import ru.yandex.practicum.filmorate.storage.film.FilmDbStorage;
 
 import java.util.List;
@@ -20,13 +21,13 @@ public class RatingController {
 
     // Получить все рейтинги (MPA)
     @GetMapping
-    public List<Rating> getAllRatings() {
+    public List<RatingResponse> getAllRatings() {
         return filmDbStorage.getAllRatings();
     }
 
     // Получить рейтинг по ID
     @GetMapping("/{id}")
-    public Rating getRatingById(@PathVariable int id) {
+    public RatingResponse getRatingById(@PathVariable int id) {
         return filmDbStorage.getRatingById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Rating not found with id " + id));
     }
