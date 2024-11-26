@@ -3,6 +3,8 @@ package ru.yandex.practicum.filmorate.storage.user;
 import org.apache.catalina.filters.ExpiresFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -12,6 +14,7 @@ import ru.yandex.practicum.filmorate.model.User;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @Primary
@@ -74,7 +77,13 @@ public class UserDbStorage implements UserStorage {
     @Override
     public User getUserById(int id) {
         String sql = "SELECT * FROM \"user\" WHERE \"user_id\" = ?";
-        return jdbcTemplate.queryForObject(sql, new Object[]{id}, userRowMapper);
+        try {
+            return jdbcTemplate.query(sql, new Object[]{id+1}, userRowMapper).stream()
+                    .findFirst()
+                    .orElseThrow(() -> new EmptyResultDataAccessException("No user found with id: " + id, 1));
+        } catch (DataAccessException e) {
+            throw new RuntimeException("Error retrieving user with id: " + id, e);
+        }
     }
 
     // Метод для предложения дружбы
