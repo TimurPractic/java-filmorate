@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.storage.user;
 
+import org.apache.catalina.filters.ExpiresFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -87,6 +88,9 @@ public class UserDbStorage implements UserStorage {
             String query = "INSERT INTO \"users_friends\" (\"first_user_id\", \"second_user_id\", \"friendship_status\") " +
                     "VALUES (?, ?, ?)";
             jdbcTemplate.update(query, firstUserId, secondUserId, Friendship.NOT_CONFIRMED.name());
+            String query2 = "SELECT COUNT (*) FROM \"users_friends\" ";
+            Integer query33 = jdbcTemplate.queryForObject(query2, Integer.class);
+            System.out.println(query33);
         } else {
             throw new IllegalArgumentException("One or both users do not exist.");
         }
@@ -101,10 +105,14 @@ public class UserDbStorage implements UserStorage {
 
     // Метод для получения списка друзей пользователя (с подтвержденным статусом)
     public List<User> getFriends(int userId) {
-        String query = "SELECT \"u\".\"user_id\", \"u\".\"email\", \"u\".\"login\", \"u\".\"user_name\", \"u\".\"birthday\" " +
-                "FROM \"user\" \"u\" " +
-                "JOIN \"users_friends\" \"uf\" ON (\"uf\".\"first_user_id\" = \"u\".\"user_id\" OR \"uf\".\"second_user_id\" = \"u\".\"user_id\") " +
-                "WHERE (\"uf\".\"first_user_id\" = ? OR \"uf\".\"second_user_id\" = ?) AND \"uf\".\"friendship_status\" = ?";
+        String query = "SELECT DISTINCT \"user\".\"user_id\", \"user\".\"email\", \"user\".\"login\", \"user\".\"user_name\", \"user\".\"birthday\" " +
+                "FROM \"users_friends\" " +
+                "JOIN \"user\" ON (" +
+                "   (\"users_friends\".\"second_user_id\" = \"user\".\"user_id\" AND \"users_friends\".\"first_user_id\" = ?) " +
+                "   OR " +
+                "   (\"users_friends\".\"first_user_id\" = \"user\".\"user_id\" AND \"users_friends\".\"second_user_id\" = ?) " +
+                ") " +
+                "WHERE \"users_friends\".\"friendship_status\" = ?";
         return jdbcTemplate.query(query, new Object[]{userId, userId, Friendship.CONFIRMED.name()}, new RowMapper<User>() {
             @Override
             public User mapRow(ResultSet rs, int rowNum) throws SQLException {

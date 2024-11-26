@@ -96,6 +96,8 @@ class UserDbStorageTests {
 
     @Test
     public void testGetFriends() {
+        jdbcTemplate.update("DELETE FROM \"users_friends\""); // Удаляем связи дружбы
+
         // Добавляем двух пользователей в дружбу.
         userStorage.proposeFriendship(1, 2);
         userStorage.proposeFriendship(1, 3);
@@ -105,9 +107,13 @@ class UserDbStorageTests {
         // Получаем список друзей для пользователя с ID 1.
         List<User> friendslist = userStorage.getFriends(1);
 
+        for (User friend : friendslist) {
+            System.out.println(friend.getName());
+        }
+
         assertThat(friendslist)
                 .hasSize(2)  // Ожидаем 2 друга
-                .extracting("id")
+                .extracting(User::getId)
                 .containsExactlyInAnyOrder(2, 3);  // ID друзей 2 и 3
     }
 

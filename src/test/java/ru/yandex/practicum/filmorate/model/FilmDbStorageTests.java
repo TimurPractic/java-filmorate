@@ -139,14 +139,14 @@ class FilmDbStorageTests {
         filmStorage.create(film);
         System.out.println("Created film ID: " + film.getId());
         int filmId = film.getId();
-
-        // Удаляем фильм.
         filmStorage.deleteFilm(filmId);
-        System.out.println("ID: " + film.getId());
+        String checkFilmDElQuery = "SELECT COUNT(*) FROM \"film\" WHERE \"film_id\" = ?";
+
+        Integer filmExists = jdbcTemplate.queryForObject(checkFilmDElQuery, Integer.class, filmId);
+        System.out.println(filmExists);
 
         // Проверяем, что фильм был удален.
-        Optional<Film> deletedFilm = Optional.ofNullable(filmStorage.getFilmById(filmId));
-        System.out.println("Film exists in DB after delete: " + deletedFilm.isPresent());
+        Optional<Integer> deletedFilm = Optional.ofNullable(filmExists);
     }
 
     @Test
