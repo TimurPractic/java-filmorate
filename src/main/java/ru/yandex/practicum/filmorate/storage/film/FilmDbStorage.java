@@ -94,8 +94,8 @@ public class FilmDbStorage implements FilmStorage {
             ps.setString(2, film.getDescription());
             ps.setDate(3, Date.valueOf(film.getReleaseDate()));
             ps.setString(4, convertDurationToTimeString(film.getDuration()));
-            ps.setString(5, film.getGenre().name());
-            ps.setString(6, film.getRating().name());
+            ps.setString(5, film.getGenre() != null ? film.getGenre().name() : null);
+            ps.setString(6, film.getRating()!= null ? film.getRating().name() : null);
             return ps;
         }, keyHolder);
 
