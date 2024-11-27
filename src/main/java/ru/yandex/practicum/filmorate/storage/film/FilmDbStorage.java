@@ -11,6 +11,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Rating;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.GenreDto;
 import ru.yandex.practicum.filmorate.service.RatingResponse;
 
 import java.sql.Date;
@@ -46,9 +47,10 @@ public class FilmDbStorage implements FilmStorage {
         return film;
     };
 
-    private final RowMapper<Genre> genreRowMapper = (rs, rowNum) -> {
-        Genre genre = Genre.values()[rs.getInt("genre_id") - 1]; // Поскольку genre_id начинается с 1
-        return genre;
+    private final RowMapper<GenreDto> genreRowMapper = (rs, rowNum) -> {
+        int genreId = rs.getInt("genre_id");
+        String genreName = rs.getString("genre_name");
+        return new GenreDto(genreId, genreName);
     };
 
     private final RowMapper<RatingResponse> ratingRowMapper = (rs, rowNum) -> {
@@ -195,14 +197,14 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     // Метод для получения всех жанров
-    public List<Genre> getAllGenres() {
-        String sql = "SELECT \"genre_id\" FROM \"genre\"";
+    public List<GenreDto> getAllGenres() {
+        String sql = "SELECT \"genre_id\", \"genre_name\" FROM \"genre\"";
         return jdbcTemplate.query(sql, genreRowMapper);
     }
 
     // Метод для получения жанра по ID
-    public Optional<Genre> getGenreById(int id) {
-        String sql = "SELECT \"genre_id\" FROM \"genre\" WHERE \"genre_id\" = ?";
+    public Optional<GenreDto> getGenreById(int id) {
+        String sql = "SELECT \"genre_id\", \"genre_name\" FROM \"genre\" WHERE \"genre_id\" = ?";
         return jdbcTemplate.query(sql, genreRowMapper, id).stream().findFirst();
     }
 

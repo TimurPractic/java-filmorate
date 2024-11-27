@@ -2,14 +2,12 @@
 DELETE FROM "genre";
 INSERT INTO "genre"
 VALUES
-(1, 'ACTION'),
-(2, 'DRAMA'),
-(3, 'COMEDY'),
-(4, 'HORROR'),
-(5, 'ROMANCE'),
-(6, 'CARTOON'),
-(7, 'THRILLER'),
-(8, 'DOCUMENTARY');
+(1, 'Комедия'),
+(2, 'Драма'),
+(3, 'Мультфильм'),
+(4, 'Триллер'),
+(5, 'Документальный'),
+(6, 'Боевик');
 
 -- Вставка данных в таблицу rating
 DELETE FROM "rating";
