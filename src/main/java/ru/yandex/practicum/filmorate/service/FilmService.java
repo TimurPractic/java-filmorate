@@ -81,8 +81,8 @@ public class FilmService {
             throw new IllegalArgumentException("Нет такого жанра: " + film.getGenre());
         }
 
-        if (!EnumSet.allOf(Rating.class).contains(film.getRating())) {
-            throw new IllegalArgumentException("Нет такого рейтинга: " + film.getRating());
+        if (!EnumSet.allOf(Rating.class).contains(film.getMpa())) {
+            throw new IllegalArgumentException("Нет такого рейтинга: " + film.getMpa());
         }
         return filmStorage.update(film);
     }

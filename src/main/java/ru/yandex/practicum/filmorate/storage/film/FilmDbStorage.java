@@ -42,7 +42,7 @@ public class FilmDbStorage implements FilmStorage {
         film.setGenre(genre);
         String ratingName = rs.getString("rating_name");
         Rating rating = Rating.valueOf(ratingName.toUpperCase());
-        film.setRating(rating);
+        film.setMpa(rating);
 
         return film;
     };
@@ -83,6 +83,7 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public Film create(Film film) {
+        // Подготавливаем SQL запрос для вставки фильма
         String sql = "INSERT INTO \"film\" (\"film_name\", \"description\", \"release_date\", \"duration\", \"genre_id\", \"rating_id\") " +
                 "VALUES (?, ?, ?, ?, " +
                 "(SELECT \"genre_id\" FROM \"genre\" WHERE \"genre_name\" = ?), " +
@@ -97,8 +98,13 @@ public class FilmDbStorage implements FilmStorage {
             ps.setString(2, film.getDescription());
             ps.setDate(3, Date.valueOf(film.getReleaseDate()));
             ps.setString(4, convertDurationToTimeString(film.getDuration()));
+
+            // Если жанр присутствует, берем его для genre_id, иначе ставим null
             ps.setString(5, film.getGenre() != null ? film.getGenre().name() : null);
-            ps.setString(6, film.getRating()!= null ? film.getRating().name() : null);
+
+            // Для rating (mpa) - если присутствует, берем его для rating_id, иначе ставим null
+            ps.setString(6, film.getMpa() != null ? film.getMpa().name() : null);
+
             return ps;
         }, keyHolder);
 
@@ -119,7 +125,7 @@ public class FilmDbStorage implements FilmStorage {
                 film.getReleaseDate(),
                 durationString,
                 film.getGenre().ordinal() + 1,
-                film.getRating().ordinal() + 1,
+                film.getMpa().ordinal() + 1,
                 film.getId());
         return film;
     }

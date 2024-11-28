@@ -17,8 +17,7 @@ CREATE TABLE IF NOT EXISTS "film"(
     "release_date" DATE NOT NULL,
     "duration" TIME NOT NULL,
     "genre_id" INTEGER REFERENCES "genre"("genre_id") ,
-    "rating_id" INTEGER,
-    FOREIGN KEY ("rating_id") REFERENCES "rating"("rating_id")
+    "rating_id" INTEGER REFERENCES "rating"("rating_id")
 );
 
 CREATE TABLE IF NOT EXISTS "user"(
