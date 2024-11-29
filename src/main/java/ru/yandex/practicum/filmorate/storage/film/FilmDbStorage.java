@@ -17,6 +17,7 @@ import ru.yandex.practicum.filmorate.service.RatingResponse;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -37,15 +38,25 @@ public class FilmDbStorage implements FilmStorage {
         film.setReleaseDate(rs.getDate("release_date").toLocalDate());
         String durationString = rs.getString("duration");
         film.setDuration(convertTimeStringToDuration(durationString));
-        int genreId = rs.getInt("genre_id");
-        Genre genre = Genre.values()[genreId - 1];
-        film.setGenre(genre);
+        film.setGenres(new ArrayList<>());
         String ratingName = rs.getString("rating_name");
         Rating rating = Rating.valueOf(ratingName.toUpperCase());
         film.setMpa(rating);
-
         return film;
     };
+
+    private void populateGenresForFilm(Film film) {
+        String sql = "SELECT g.\"genre_id\" " +
+                "FROM \"film_genre\" fg " +
+                "JOIN \"genre\" g ON fg.\"genre_id\" = g.\"genre_id\" " +
+                "WHERE fg.\"film_id\" = ?";
+
+        List<Genre> genres = jdbcTemplate.query(sql, new Object[]{film.getId()}, (rs, rowNum) ->
+                Genre.fromId(rs.getInt("genre_id"))
+        );
+
+        film.setGenres(genres);
+    }
 
     private final RowMapper<GenreDto> genreRowMapper = (rs, rowNum) -> {
         int genreId = rs.getInt("genre_id");
@@ -83,50 +94,50 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public Film create(Film film) {
-        // Подготавливаем SQL запрос для вставки фильма
-        String sql = "INSERT INTO \"film\" (\"film_name\", \"description\", \"release_date\", \"duration\", \"genre_id\", \"rating_id\") " +
+        String sql = "INSERT INTO \"film\" (\"film_name\", \"description\", \"release_date\", \"duration\", \"rating_id\") " +
                 "VALUES (?, ?, ?, ?, " +
-                "(SELECT \"genre_id\" FROM \"genre\" WHERE \"genre_name\" = ?), " +
                 "(SELECT \"rating_id\" FROM \"rating\" WHERE \"rating_name\" = ?))";
-
-        // Выполняем запрос с RETURN_GENERATED_KEYS, чтобы получить автоматически сгенерированный film_id
         KeyHolder keyHolder = new GeneratedKeyHolder();
-
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"film_id"});
             ps.setString(1, film.getName());
             ps.setString(2, film.getDescription());
             ps.setDate(3, Date.valueOf(film.getReleaseDate()));
             ps.setString(4, convertDurationToTimeString(film.getDuration()));
-
-            // Если жанр присутствует, берем его для genre_id, иначе ставим null
-            ps.setString(5, film.getGenre() != null ? film.getGenre().name() : null);
-
-            // Для rating (mpa) - если присутствует, берем его для rating_id, иначе ставим null
-            ps.setString(6, film.getMpa() != null ? film.getMpa().name() : null);
-
+            ps.setString(5, film.getMpa() != null ? film.getMpa().name() : null);
             return ps;
         }, keyHolder);
-
-        // Устанавливаем автоматически сгенерированный id в объект Film
         int generatedId = keyHolder.getKey().intValue();
         film.setId(generatedId);
-
+        saveGenres(film);
         return film;
+    }
+
+    private void saveGenres(Film film) {
+        String sql = "INSERT INTO \"film_genre\" (\"film_id\", \"genre_id\") VALUES (?, ?)";
+        List<Genre> genres = film.getGenres();
+
+        if (genres != null) {
+            for (Genre genre : genres) {
+                jdbcTemplate.update(sql, film.getId(), genre.getId());
+            }
+        }
     }
 
     @Override
     public Film update(Film film) {
         String durationString = convertDurationToTimeString(film.getDuration());
-        String sql = "UPDATE \"film\" SET \"film_name\" = ?, \"description\" = ?, \"release_date\" = ?, \"duration\" = ?, \"genre_id\" = ?, \"rating_id\" = ? WHERE \"film_id\" = ?";
+        String sql = "UPDATE \"film\" SET \"film_name\" = ?, \"description\" = ?, \"release_date\" = ?, \"duration\" = ?, " +
+                "\"rating_id\" = (SELECT \"rating_id\" FROM \"rating\" WHERE \"rating_name\" = ?) WHERE \"film_id\" = ?";
         jdbcTemplate.update(sql,
                 film.getName(),
                 film.getDescription(),
                 film.getReleaseDate(),
                 durationString,
-                film.getGenre().ordinal() + 1,
                 film.getMpa().ordinal() + 1,
                 film.getId());
+        jdbcTemplate.update("DELETE FROM \"film_genre\" WHERE \"film_id\" = ?", film.getId());
+        saveGenres(film);
         return film;
     }
 

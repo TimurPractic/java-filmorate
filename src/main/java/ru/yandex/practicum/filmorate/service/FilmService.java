@@ -77,8 +77,10 @@ public class FilmService {
         if (filmStorage.getFilmById(film.getId()) == null) {
             throw new IllegalArgumentException("Фильм с ID " + film.getId() + " не найден.");
         }
-        if (!EnumSet.allOf(Genre.class).contains(film.getGenre())) {
-            throw new IllegalArgumentException("Нет такого жанра: " + film.getGenre());
+        for (Genre genre : film.getGenres()) {
+            if (!EnumSet.allOf(Genre.class).contains(genre)) {
+                throw new IllegalArgumentException("Нет такого жанра: " + genre);
+            }
         }
 
         if (!EnumSet.allOf(Rating.class).contains(film.getMpa())) {

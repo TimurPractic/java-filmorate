@@ -10,9 +10,9 @@ import ru.yandex.practicum.filmorate.service.RatingSerializer;
 public enum Rating {
     G("G", 1),
     PG("PG", 2),
-    PG_13("PG-13", 3),
+    PG13("PG-13", 3),
     R("R", 4),
-    NC_17("NC-17", 5);
+    NC17("NC-17", 5);
 
     private final String displayName;
     private final int id;

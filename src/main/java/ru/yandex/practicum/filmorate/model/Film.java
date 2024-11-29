@@ -12,10 +12,14 @@ import jakarta.validation.constraints.Size;
 import java.time.Duration;
 import java.time.LocalDate;
 
+import ru.yandex.practicum.filmorate.service.GenreDeserializer;
+import ru.yandex.practicum.filmorate.service.GenreSerializer;
 import ru.yandex.practicum.filmorate.service.RatingDeserializer;
 import ru.yandex.practicum.filmorate.service.RatingSerializer;
 import ru.yandex.practicum.filmorate.validation.ValidDuration;
 import jakarta.validation.constraints.PastOrPresent;
+
+import java.util.List;
 import java.util.Set;
 import java.util.HashSet;
 
@@ -56,7 +60,9 @@ public class Film {
     /**
      * Genre of the film.
      */
-    private Genre genre;
+    @JsonDeserialize(using = GenreDeserializer.class)
+    @JsonSerialize(using = GenreSerializer.class)
+    private List<Genre> genres;
 
     /**
      * Rating of the film.
