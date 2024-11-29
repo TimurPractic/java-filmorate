@@ -40,6 +40,13 @@ public enum Rating {
     }
 
     public static Rating fromDisplayName(String displayName) {
+        // Исправляем PG13 на PG-13
+        if (displayName.equalsIgnoreCase("PG13")) {
+            displayName = "PG-13";
+        }
+        if (displayName.equalsIgnoreCase("NC17")) {
+            displayName = "NC-17";
+        }
         for (Rating rating : Rating.values()) {
             if (rating.displayName.equalsIgnoreCase(displayName)) {
                 return rating;
