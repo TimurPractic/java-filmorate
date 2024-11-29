@@ -134,7 +134,7 @@ public class FilmDbStorage implements FilmStorage {
                 film.getDescription(),
                 film.getReleaseDate(),
                 durationString,
-                film.getMpa().ordinal() + 1,
+                film.getMpa().name(),
                 film.getId());
         jdbcTemplate.update("DELETE FROM \"film_genre\" WHERE \"film_id\" = ?", film.getId());
         saveGenres(film);
