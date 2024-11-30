@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.service.GenreDto;
 import ru.yandex.practicum.filmorate.storage.film.FilmDbStorage;
 
@@ -28,6 +29,6 @@ public class GenreController {
     @GetMapping("/{id}")
     public GenreDto getGenreById(@PathVariable int id) {
         return filmDbStorage.getGenreById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Genre not found with id " + id));
+                .orElseThrow(() -> new FilmNotFoundException("Genre not found with id " + id));
     }
 }
