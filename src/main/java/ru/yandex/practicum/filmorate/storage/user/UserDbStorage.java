@@ -76,7 +76,7 @@ public class UserDbStorage implements UserStorage {
     public User getUserById(int id) {
         String sql = "SELECT * FROM \"user\" WHERE \"user_id\" = ?";
         try {
-            return jdbcTemplate.query(sql, new Object[]{id+1}, userRowMapper).stream()
+            return jdbcTemplate.query(sql, new Object[]{id + 1}, userRowMapper).stream()
                     .findFirst()
                     .orElseThrow(() -> new EmptyResultDataAccessException("No user found with id: " + id, 1));
         } catch (DataAccessException e) {
