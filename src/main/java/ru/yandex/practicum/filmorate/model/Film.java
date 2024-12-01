@@ -1,15 +1,25 @@
 package ru.yandex.practicum.filmorate.model;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import java.time.Duration;
 import java.time.LocalDate;
+
+import ru.yandex.practicum.filmorate.service.GenreDeserializer;
+import ru.yandex.practicum.filmorate.service.GenreSerializer;
+import ru.yandex.practicum.filmorate.service.RatingDeserializer;
+import ru.yandex.practicum.filmorate.service.RatingSerializer;
 import ru.yandex.practicum.filmorate.validation.ValidDuration;
 import jakarta.validation.constraints.PastOrPresent;
+
+import java.util.List;
 import java.util.Set;
 import java.util.HashSet;
 
@@ -47,6 +57,24 @@ public class Film {
     @ValidDuration
     private Duration duration;
 
+    /**
+     * Genre of the film.
+     */
+    @JsonDeserialize(using = GenreDeserializer.class)
+    @JsonSerialize(using = GenreSerializer.class)
+    private List<Genre> genres;
+
+    /**
+     * Rating of the film.
+     */
+    @JsonProperty("mpa")
+    @JsonDeserialize(using = RatingDeserializer.class)
+    @JsonSerialize(using = RatingSerializer.class)
+    private Rating mpa;
+
+    /**
+     * Set of user IDs who liked the film.
+     */
     private Set<Integer> likes = new HashSet<>();
 
     /**
@@ -75,5 +103,6 @@ public class Film {
     public void setDurationMinutes(int minutes) {
         this.duration = Duration.ofMinutes(minutes);
     }
+
 
 }

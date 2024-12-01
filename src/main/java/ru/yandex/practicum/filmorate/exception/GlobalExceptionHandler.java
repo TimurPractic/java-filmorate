@@ -49,14 +49,14 @@ public class GlobalExceptionHandler {
 
     // Обработка ошибок IllegalArgumentException (например, когда ID не найден)
     @ExceptionHandler(IllegalArgumentException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<Map<String, String>> handleIllegalArgumentException(IllegalArgumentException ex) {
         Map<String, String> errors = new HashMap<>();
         String fieldName = "error";
         String errorMessage = ex.getMessage();
         errors.put(fieldName, errorMessage);
         log.error("Ошибка IllegalArgumentException: {}", ex.getMessage());
-        return new ResponseEntity<>(errors, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 
     // Обработка ошибок UserNotFoundException (например, когда ID не найден)
@@ -68,6 +68,17 @@ public class GlobalExceptionHandler {
         String errorMessage = ex.getMessage();
         errors.put(fieldName, errorMessage);
         log.error("Ошибка UserNotFoundException: {}", ex.getMessage());
+        return new ResponseEntity<>(errors, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(FilmNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<Map<String, String>> filmNotFoundException(FilmNotFoundException ex) {
+        Map<String, String> errors = new HashMap<>();
+        String fieldName = "error";
+        String errorMessage = ex.getMessage();
+        errors.put(fieldName, errorMessage);
+        log.error("Ошибка FilmNotFoundException: {}", ex.getMessage());
         return new ResponseEntity<>(errors, HttpStatus.NOT_FOUND);
     }
 }

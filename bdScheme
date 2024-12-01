@@ -1,0 +1,57 @@
+Table film {
+  film_id integer [primary key]
+  name string
+  description string
+  releaseDate date
+  duration duration
+  genre_id integer 
+  rating_id integer
+}
+
+Table user {
+  user_id integer [primary key]
+  email string
+  login string
+  name string
+  birthday date
+  friends integer
+}
+
+Table filmslikes {
+  film_id integer
+  user_id integer
+  like boolean
+}
+Table usersfriends {
+  first_user_id integer
+  second_user_id integer
+  friendship enum
+}
+
+table genre {
+  genre_id integer [primary key]
+  genre_name string
+}
+
+table rating {
+  rating_id integer [primary key]
+  rating_name string
+}
+
+table genrefilm  {
+  genre_id integer
+  film_id integer
+}
+
+enum friendship {
+NotConfirmed
+Confirmed
+}
+
+Ref: film.film_id < filmslikes.film_id
+Ref: user.user_id < filmslikes.user_id
+Ref: user.user_id < usersfriends.first_user_id
+Ref: user.user_id < usersfriends.second_user_id
+Ref: film.rating_id > rating.rating_id
+Ref: film.film_id < genrefilm.film_id
+Ref: genre.genre_id < genrefilm.genre_id
